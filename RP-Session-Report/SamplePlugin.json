@@ -5,7 +5,8 @@
   "Description": "A Rp note taking tool for roleplayers, to keep notes of there rp or events in game that get saved to a notepad file to view later out of game",
   "ApplicableVersion": "any",
   "Tags": [
-    "plugin",
-    "RP"
+    "note",
+    "RP",
+    "Roleplay"
   ]
 }

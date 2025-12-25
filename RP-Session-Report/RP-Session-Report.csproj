@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Dalamud.NET.Sdk/14.0.1">
+  <PropertyGroup>
+    <Version>0.0.0.5</Version>
+    <PackageProjectUrl>https://github.com/goatcorp/SamplePlugin</PackageProjectUrl>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <Author>evelynrose20</Author>
+    <Name>RP-Session-Report</Name>
+    <Punchline>A Rp note taking tool for roleplayers</Punchline>
+    <Description>A Rp note taking tool for roleplayers, to keep notes of there rp or events in game that get saved to a notepad file to view later out of game</Description>
+    <ApplicableVersion>any</ApplicableVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="Changelog\changelog.yaml" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Data\goat.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </Content>
+  </ItemGroup>
+</Project>
