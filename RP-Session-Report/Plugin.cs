@@ -3,9 +3,9 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using SamplePlugin.Windows;
+using RPTools.Windows;
 
-namespace SamplePlugin;
+namespace RPTools;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -21,11 +21,12 @@ public sealed class Plugin : IDalamudPlugin
 
     public Configuration Configuration { get; init; }
 
-    public readonly WindowSystem WindowSystem = new("RP-Session-Report");
+    public readonly WindowSystem WindowSystem = new("RP-tools");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private NotesBrowserWindow NotesBrowserWindow { get; init; }
     private ChangelogWindow ChangelogWindow { get; init; }
+    private StutterWriterWindow StutterWriterWindow { get; init; }
 
     public Plugin()
     {
@@ -35,11 +36,13 @@ public sealed class Plugin : IDalamudPlugin
         MainWindow = new MainWindow(this);
         NotesBrowserWindow = new NotesBrowserWindow(this, MainWindow);
         ChangelogWindow = new ChangelogWindow(this);
+        StutterWriterWindow = new StutterWriterWindow(this);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
         WindowSystem.AddWindow(NotesBrowserWindow);
         WindowSystem.AddWindow(ChangelogWindow);
+        WindowSystem.AddWindow(StutterWriterWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
@@ -58,7 +61,7 @@ public sealed class Plugin : IDalamudPlugin
 
         // Add a simple message to the log with level set to information
         // Use /xllog to open the log window in-game
-        // Example Output: 00:57:54.959 | INF | [SamplePlugin] ===A cool log message from RP-Session-Report===
+        // Example Output: 00:57:54.959 | INF | [RPTools] ===A cool log message from RP-tools===
         Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
     }
 
@@ -68,12 +71,13 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw -= DrawUI;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
-        
+
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
         MainWindow.Dispose();
         ChangelogWindow.Dispose();
+        StutterWriterWindow.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
     }
@@ -83,16 +87,18 @@ public sealed class Plugin : IDalamudPlugin
         // In response to the slash command, toggle the display status of our main ui
         MainWindow.Toggle();
     }
-    
+
     public void ToggleConfigUi() => ConfigWindow.Toggle();
     public void ToggleMainUi() => MainWindow.Toggle();
     public void ToggleChangelogUi() => ChangelogWindow.Toggle();
+    public void ToggleNotesBrowserUi() => NotesBrowserWindow.Toggle();
+    public void ToggleStutterWriterUi() => StutterWriterWindow.Toggle();
+
     private void DrawUI()
     {
         ChangelogWindow.CheckForUpdates();
         WindowSystem.Draw();
     }
-
-
-    public void ToggleNotesBrowserUi() => NotesBrowserWindow.Toggle();
 }
+
+

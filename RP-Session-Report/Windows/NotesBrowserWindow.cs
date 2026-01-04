@@ -5,7 +5,7 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace SamplePlugin.Windows;
+namespace RPTools.Windows;
 
 public class NotesBrowserWindow : Window, IDisposable
 {
@@ -96,3 +96,4 @@ public class NotesBrowserWindow : Window, IDisposable
         return Path.Combine(baseDir, "notes");
     }
 }
+

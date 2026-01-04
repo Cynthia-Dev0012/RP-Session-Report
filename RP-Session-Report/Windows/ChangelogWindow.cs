@@ -8,11 +8,11 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 using YamlDotNet.Serialization;
 
-namespace SamplePlugin.Windows;
+namespace RPTools.Windows;
 
 public sealed class ChangelogWindow : Window, IDisposable
 {
-    private const string EmbeddedChangelogResource = "SamplePlugin.Changelog.changelog.yaml";
+    private const string EmbeddedChangelogResource = "RPTools.Changelog.changelog.yaml";
 
     private readonly Plugin plugin;
     private ChangelogFile changelog = new();
@@ -236,3 +236,4 @@ public sealed class ChangelogWindow : Window, IDisposable
         public List<string> Items { get; set; } = new();
     }
 }
+

@@ -1,0 +1,12 @@
+tagline: "RP Session-Report v0.0.0.5"
+subline: "made public!"
+changelog:
+  - name: "v0.0.0.5"
+    tagline: "First release"
+    date: "January 1 2026"
+    isCurrent: true
+    versions:
+      - number: "Notes"
+        icon: ""
+        items:
+          - "rerelease. for 7.4 and made public"

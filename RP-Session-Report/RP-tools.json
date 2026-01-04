@@ -1,0 +1,14 @@
+{
+  "Author": "evelynrose20",
+  "Name": "RP-tools",
+  "Punchline": "A Rp note taking tool for roleplayers",
+  "Description": "A Rp note taking tool for roleplayers, to keep notes of there rp or events in game that get saved to a notepad file to view later out of game",
+  "IconUrl": "icon.png",
+  "ApplicableVersion": "any",
+  "repourl:": "https://github.com/Cynthia-Dev0012/RP-tools",
+  "Tags": [
+    "note",
+    "RP",
+    "Roleplay"
+  ]
+}

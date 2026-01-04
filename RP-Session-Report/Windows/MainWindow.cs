@@ -4,14 +4,15 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace SamplePlugin.Windows;
+namespace RPTools.Windows;
 
 public class MainWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
     private const int MaxNoteChars = 200_000;
     public const int MinAutoSaveSeconds = 5;
-    private const string HeaderStart = "---RP-Session-Report---";
+    private const string HeaderStart = "---RP-tools---";
+    private const string LegacyHeaderStart = "---RP-Session-Report---";
     private const string HeaderEnd = "---";
     private string noteText = string.Empty;
     private string noteFileName = string.Empty;
@@ -120,66 +121,75 @@ public class MainWindow : Window, IDisposable
             plugin.ToggleConfigUi();
         }
 
-        if (ImGui.BeginTable("SessionFields", 2))
+        ImGui.SameLine();
+        if (ImGui.Button("Stutter Writer..."))
         {
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("File");
-            ImGui.SetNextItemWidth(-1f);
-            ImGui.InputText("##NoteFileName", ref noteFileName, 128);
+            plugin.ToggleStutterWriterUi();
+        }
 
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("Name");
-            ImGui.SetNextItemWidth(-1f);
-            if (ImGui.InputText("##SessionName", ref sessionName, 128))
+        if (ImGui.CollapsingHeader("Session Details", ImGuiTreeNodeFlags.DefaultOpen))
+        {
+            if (ImGui.BeginTable("SessionFields", 2))
             {
-                plugin.Configuration.SessionName = sessionName;
-                plugin.Configuration.Save();
-                noteDirty = true;
-            }
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("File");
+                ImGui.SetNextItemWidth(-1f);
+                ImGui.InputText("##NoteFileName", ref noteFileName, 128);
 
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("Group");
-            ImGui.SetNextItemWidth(-1f);
-            if (ImGui.InputText("##SessionGroup", ref sessionGroup, 128))
-            {
-                plugin.Configuration.SessionGroup = sessionGroup;
-                plugin.Configuration.Save();
-                noteDirty = true;
-            }
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("Name");
+                ImGui.SetNextItemWidth(-1f);
+                if (ImGui.InputText("##SessionName", ref sessionName, 128))
+                {
+                    plugin.Configuration.SessionName = sessionName;
+                    plugin.Configuration.Save();
+                    noteDirty = true;
+                }
 
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("Where They Meet");
-            ImGui.SetNextItemWidth(-1f);
-            if (ImGui.InputText("##SessionMeetingPlace", ref sessionMeetingPlace, 128))
-            {
-                plugin.Configuration.SessionMeetingPlace = sessionMeetingPlace;
-                plugin.Configuration.Save();
-                noteDirty = true;
-            }
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("Group");
+                ImGui.SetNextItemWidth(-1f);
+                if (ImGui.InputText("##SessionGroup", ref sessionGroup, 128))
+                {
+                    plugin.Configuration.SessionGroup = sessionGroup;
+                    plugin.Configuration.Save();
+                    noteDirty = true;
+                }
 
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("Day They Met");
-            ImGui.SetNextItemWidth(-1f);
-            if (ImGui.InputText("##SessionMeetingDay", ref sessionMeetingDay, 128))
-            {
-                plugin.Configuration.SessionMeetingDay = sessionMeetingDay;
-                plugin.Configuration.Save();
-                noteDirty = true;
-            }
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("Where They Meet");
+                ImGui.SetNextItemWidth(-1f);
+                if (ImGui.InputText("##SessionMeetingPlace", ref sessionMeetingPlace, 128))
+                {
+                    plugin.Configuration.SessionMeetingPlace = sessionMeetingPlace;
+                    plugin.Configuration.Save();
+                    noteDirty = true;
+                }
 
-            ImGui.TableNextColumn();
-            ImGui.TextUnformatted("Relationship");
-            ImGui.SetNextItemWidth(-1f);
-            if (ImGui.InputText("##SessionRelationship", ref sessionRelationship, 128))
-            {
-                plugin.Configuration.SessionRelationship = sessionRelationship;
-                plugin.Configuration.Save();
-                noteDirty = true;
-            }
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("Day They Met");
+                ImGui.SetNextItemWidth(-1f);
+                if (ImGui.InputText("##SessionMeetingDay", ref sessionMeetingDay, 128))
+                {
+                    plugin.Configuration.SessionMeetingDay = sessionMeetingDay;
+                    plugin.Configuration.Save();
+                    noteDirty = true;
+                }
 
-            ImGui.TableNextColumn();
-            ImGui.Dummy(new Vector2(1f, 1f));
-            ImGui.EndTable();
+                ImGui.TableNextColumn();
+                ImGui.TextUnformatted("Relationship");
+                ImGui.SetNextItemWidth(-1f);
+                if (ImGui.InputText("##SessionRelationship", ref sessionRelationship, 128))
+                {
+                    plugin.Configuration.SessionRelationship = sessionRelationship;
+                    plugin.Configuration.Save();
+                    noteDirty = true;
+                }
+
+                ImGui.TableNextColumn();
+                ImGui.Dummy(new Vector2(1f, 1f));
+                ImGui.EndTable();
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(statusMessage))
@@ -345,8 +355,12 @@ public class MainWindow : Window, IDisposable
             return false;
         }
 
-        var startIndex = contents.IndexOf(HeaderStart, StringComparison.Ordinal);
-        if (startIndex != 0)
+        var headerStart = HeaderStart;
+        if (contents.StartsWith(LegacyHeaderStart, StringComparison.Ordinal))
+        {
+            headerStart = LegacyHeaderStart;
+        }
+        else if (!contents.StartsWith(HeaderStart, StringComparison.Ordinal))
         {
             return false;
         }
@@ -364,7 +378,7 @@ public class MainWindow : Window, IDisposable
             return false;
         }
 
-        var headerSection = contents.Substring(HeaderStart.Length, endIndex - HeaderStart.Length);
+        var headerSection = contents.Substring(headerStart.Length, endIndex - headerStart.Length);
         var lines = headerSection.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var line in lines)
         {
@@ -441,3 +455,5 @@ public class MainWindow : Window, IDisposable
         return sanitized;
     }
 }
+
+

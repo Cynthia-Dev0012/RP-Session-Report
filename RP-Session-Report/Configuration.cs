@@ -1,7 +1,7 @@
-﻿using Dalamud.Configuration;
+using Dalamud.Configuration;
 using System;
 
-namespace SamplePlugin;
+namespace RPTools;
 
 [Serializable]
 public class Configuration : IPluginConfiguration
@@ -21,9 +21,15 @@ public class Configuration : IPluginConfiguration
     public string SessionRelationship { get; set; } = string.Empty;
     public string LastSeenChangelogId { get; set; } = string.Empty;
 
+    public StutterSettings StutterWriterSettings { get; set; } = new();
+    public bool IsStutterWriterWindowOpen { get; set; } = false;
+    public string StutterWriterChatMode { get; set; } = "/em";
+    public bool StutterWriterChatModeLocked { get; set; } = false;
+
     // The below exists just to make saving less cumbersome
     public void Save()
     {
         Plugin.PluginInterface.SavePluginConfig(this);
     }
 }
+
